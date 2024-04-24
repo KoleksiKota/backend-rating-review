@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Getter @Setter
 public class RatingReview {
-    private UUID reviewId;
+    private UUID ratingReviewId;
     private String reviewer;
     private int rating;
     private String review;

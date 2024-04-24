@@ -27,8 +27,8 @@ public class RatingReviewBuilder implements Builder {
         return this;
     }
 
-    public RatingReviewBuilder setReviewId() {
-        ratingReview.setReviewId(UUID.randomUUID());
+    public RatingReviewBuilder setRatingReviewId() {
+        ratingReview.setRatingReviewId(UUID.randomUUID());
         return this;
     }
 
