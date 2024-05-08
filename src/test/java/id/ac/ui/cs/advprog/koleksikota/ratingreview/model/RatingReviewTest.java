@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ReviewTest{
+class RatingReviewTest {
     private List<Box> boxes;
 
     @BeforeEach
@@ -32,12 +32,13 @@ class ReviewTest{
 
     @Test
     void testCreateReview(){
-        Box product = boxes.getFirst();
-        RatingReview ratingReview = new RatingReview("jajang",
+        Box box = boxes.getFirst();
+        RatingReview ratingReview = new RatingReview(box, "jajang",
                 "bagus boxnya, ada  bau kali ciliwung", 4);
         ratingReview.setRatingReviewId("cef7ead5-710d-4b10-8266-5e1c81a636fe");
 
         assertNotNull(ratingReview);
+        assertEquals(box.getBoxId(), ratingReview.getBox().getBoxId());
         assertEquals("cef7ead5-710d-4b10-8266-5e1c81a636fe", ratingReview.getRatingReviewId());
         assertEquals("jajang", ratingReview.getReviewer());
         assertEquals("bagus boxnya, ada  bau kali ciliwung", ratingReview.getReview());
@@ -49,7 +50,7 @@ class ReviewTest{
     void testCreateReviewInvalidRating(){
         Box box = boxes.getFirst();
         assertThrows(IllegalArgumentException.class, () -> {
-            RatingReview ratingReview = new RatingReview("jajang",
+            RatingReview ratingReview = new RatingReview(box,"jajang",
                     "semua orang bingung", 6);
         });
     }

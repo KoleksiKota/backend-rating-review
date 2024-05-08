@@ -9,13 +9,15 @@ import id.ac.ui.cs.advprog.koleksikota.ratingreview.enums.ApprovalStatus;
 
 @Getter @Setter
 public class RatingReview {
+    private Box box;
     private String ratingReviewId;
     private String reviewer;
     private int rating;
     private String review;
     private String approvalStatus;
 
-    public RatingReview(String reviewer, String review, int rating) {
+    public RatingReview(Box box, String reviewer, String review, int rating) {
+        this.box = box;
         this.ratingReviewId = UUID.randomUUID().toString();
         this.reviewer = reviewer;
         this.review = review;
