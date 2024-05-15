@@ -24,6 +24,9 @@ public class RatingReviewController {
     @Autowired
     RatingReviewService ratingReviewService;
 
+    @Autowired
+    RatingReviewRepository ratingReviewRepository;
+
     @GetMapping
     public String renderRatingReviewPage() {
         return "HomePage";
@@ -33,7 +36,6 @@ public class RatingReviewController {
     public ResponseEntity<?> createReview(@RequestBody RatingReview ratingReview){
         Map<String, Object> res = new HashMap<>();
         try {
-            RatingReviewRepository ratingReviewRepository = new RatingReviewRepository();
             RatingReviewCommand createRatingReviewCommand = new CreateRatingReviewCommand(ratingReview, ratingReviewRepository);
             ratingReviewService.executeCommand(createRatingReviewCommand);
 
@@ -53,7 +55,6 @@ public class RatingReviewController {
     public ResponseEntity<?> deleteReview(@PathVariable("ratingReviewId") String id){
         Map<String, Object> res = new HashMap<>();
         try{
-            RatingReviewRepository ratingReviewRepository = new RatingReviewRepository();
             RatingReviewCommand deleteRatingReviewCommand = new DeleteRatingReviewCommand(id, ratingReviewRepository);
             ratingReviewService.executeCommand(deleteRatingReviewCommand);
 
@@ -73,7 +74,6 @@ public class RatingReviewController {
     public ResponseEntity<?> editReview(@RequestBody RatingReview ratingReview){
         Map<String, Object> res = new HashMap<>();
         try{
-            RatingReviewRepository ratingReviewRepository = new RatingReviewRepository();
             RatingReviewCommand editRatingReviewCommand = new EditRatingReviewCommand(ratingReviewRepository, ratingReview);
             ratingReviewService.executeCommand(editRatingReviewCommand);
 

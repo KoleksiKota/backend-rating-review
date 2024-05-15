@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface RatingReviewService {
     Optional<RatingReview> executeCommand(RatingReviewCommand command);
     List<RatingReview> findAll();
+    RatingReview findRatingReviewByBox(String boxId);
 }
