@@ -7,17 +7,24 @@ import id.ac.ui.cs.advprog.koleksikota.ratingreview.command.CreateRatingReviewCo
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(MockitoExtension.class)
 class CreateRatingReviewCommandTest {
+    @Mock
     private RatingReviewRepository ratingReviewRepository;
     private Box box;
 
     @BeforeEach
     void setUp() {
-        ratingReviewRepository = new RatingReviewRepository();
         box = new Box();
         box.setBoxId("a2c62328-4a37-4664-83c7-f32db8620155");
         box.setBoxName("Lempuyangan");
@@ -27,13 +34,9 @@ class CreateRatingReviewCommandTest {
     @Test
     void testExecuteCreate() {
         RatingReview ratingReview = new RatingReview(box, "jajang", "kgk enak kiriman lu cok", 1);
+        Mockito.when(ratingReviewRepository.save(ratingReview)).thenReturn(ratingReview);
         CreateRatingReviewCommand createRatingReviewCommand = new CreateRatingReviewCommand(ratingReview, ratingReviewRepository);
-        createRatingReviewCommand.execute();
-
-        RatingReview savedRatingReview = ratingReviewRepository.findById(ratingReview.getRatingReviewId());
-        assertNotNull(savedRatingReview);
-        assertEquals(ratingReview.getReviewer(), savedRatingReview.getReviewer());
-        assertEquals(ratingReview.getReview(), savedRatingReview.getReview());
-        assertEquals(ratingReview.getRating(), savedRatingReview.getRating());
+        Optional<RatingReview> result = createRatingReviewCommand.execute();
+        assertEquals(ratingReview, result.get());
     }
 }

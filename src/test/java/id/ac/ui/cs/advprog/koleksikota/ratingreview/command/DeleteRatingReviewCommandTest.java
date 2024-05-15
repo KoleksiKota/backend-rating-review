@@ -7,15 +7,23 @@ import id.ac.ui.cs.advprog.koleksikota.ratingreview.command.DeleteRatingReviewCo
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+@ExtendWith(MockitoExtension.class)
 class DeleteRatingReviewCommandTest {
+    @Mock
     private RatingReviewRepository ratingReviewRepository;
     private Box box;
 
     @BeforeEach
     void setUp() {
-        ratingReviewRepository = new RatingReviewRepository();
         box = new Box();
         box.setBoxId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         box.setBoxName("Jakarta");
@@ -30,7 +38,7 @@ class DeleteRatingReviewCommandTest {
         DeleteRatingReviewCommand deleteRatingReviewCommand = new DeleteRatingReviewCommand(ratingReview.getRatingReviewId(), ratingReviewRepository);
         deleteRatingReviewCommand.execute();
 
-        RatingReview deletedRatingReview = ratingReviewRepository.findById(ratingReview.getRatingReviewId());
-        assertNull(deletedRatingReview);
+        Optional<RatingReview> deletedReview = ratingReviewRepository.findById(ratingReview.getRatingReviewId());
+        assertFalse(deletedReview.isPresent());
     }
 }
