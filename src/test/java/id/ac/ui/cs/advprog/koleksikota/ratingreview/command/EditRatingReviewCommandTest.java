@@ -40,14 +40,14 @@ class EditRatingReviewCommandTest {
     void testExecuteEdit() {
         when(ratingReviewRepository.save(any(RatingReview.class))).thenReturn(ratingReview);
 
-        when(ratingReviewRepository.findById(ratingReview.getRatingReviewId())).thenReturn(Optional.of(ratingReview));
+        when(ratingReviewRepository.findById(String.valueOf(ratingReview.getRatingReviewId()))).thenReturn(Optional.of(ratingReview));
 
         ratingReview.setRating(3);
         ratingReview.setReview("not bad lah");
         EditRatingReviewCommand editRatingReviewCommand = new EditRatingReviewCommand(ratingReviewRepository, ratingReview);
         editRatingReviewCommand.execute();
 
-        Optional<RatingReview> updatedRatingReview = ratingReviewRepository.findById(ratingReview.getRatingReviewId());
+        Optional<RatingReview> updatedRatingReview = ratingReviewRepository.findById(String.valueOf(ratingReview.getRatingReviewId()));
         assertEquals(3, updatedRatingReview.get().getRating()); // Check the new rating
         assertEquals("not bad lah", updatedRatingReview.get().getReview()); // Check the new review
     }

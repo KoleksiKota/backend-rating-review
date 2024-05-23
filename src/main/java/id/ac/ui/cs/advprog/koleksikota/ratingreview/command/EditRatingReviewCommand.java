@@ -16,7 +16,7 @@ public class EditRatingReviewCommand implements RatingReviewCommand{
 
     @Override
     public Optional<RatingReview> execute() {
-        Optional<RatingReview> existingRatingReview = ratingReviewRepository.findById(updatedReview.getRatingReviewId());
+        Optional<RatingReview> existingRatingReview = ratingReviewRepository.findById(String.valueOf(updatedReview.getRatingReviewId()));
         if (existingRatingReview.isPresent()) {
             ratingReviewRepository.save(updatedReview);
         }

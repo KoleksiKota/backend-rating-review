@@ -16,9 +16,9 @@ import org.springframework.stereotype.Controller;
 @AllArgsConstructor
 @Table(name = "rating-review")
 public class RatingReview {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id @Column(name = "id_rating_review", updatable = false, nullable = false)
-    private String ratingReviewId;
+    private UUID ratingReviewId;
 
     @Column(name = "reviewer")
     private String reviewer;

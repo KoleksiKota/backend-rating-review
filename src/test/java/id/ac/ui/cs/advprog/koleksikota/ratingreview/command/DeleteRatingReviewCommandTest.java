@@ -38,7 +38,7 @@ class DeleteRatingReviewCommandTest {
         DeleteRatingReviewCommand deleteRatingReviewCommand = new DeleteRatingReviewCommand(ratingReview.getRatingReviewId(), ratingReviewRepository);
         deleteRatingReviewCommand.execute();
 
-        Optional<RatingReview> deletedReview = ratingReviewRepository.findById(ratingReview.getRatingReviewId());
+        Optional<RatingReview> deletedReview = ratingReviewRepository.findById(String.valueOf(ratingReview.getRatingReviewId()));
         assertFalse(deletedReview.isPresent());
     }
 }

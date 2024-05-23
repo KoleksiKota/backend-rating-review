@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/review")
+@RequestMapping("/rating-review")
 public class RatingReviewController {
 
     @Autowired
@@ -33,7 +34,7 @@ public class RatingReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createReview(@RequestBody RatingReview ratingReview){
+    public ResponseEntity<?> createRatingReview(@RequestBody RatingReview ratingReview){
         Map<String, Object> res = new HashMap<>();
         try {
             RatingReviewCommand createRatingReviewCommand = new CreateRatingReviewCommand(ratingReview, ratingReviewRepository);
@@ -52,7 +53,7 @@ public class RatingReviewController {
     }
 
     @DeleteMapping("/{ratingReviewId}")
-    public ResponseEntity<?> deleteReview(@PathVariable("ratingReviewId") String id){
+    public ResponseEntity<?> deleteRatingReview(@PathVariable("ratingReviewId") UUID id){
         Map<String, Object> res = new HashMap<>();
         try{
             RatingReviewCommand deleteRatingReviewCommand = new DeleteRatingReviewCommand(id, ratingReviewRepository);
@@ -71,7 +72,7 @@ public class RatingReviewController {
     }
 
     @PutMapping
-    public ResponseEntity<?> editReview(@RequestBody RatingReview ratingReview){
+    public ResponseEntity<?> editRatingReview(@RequestBody RatingReview ratingReview){
         Map<String, Object> res = new HashMap<>();
         try{
             RatingReviewCommand editRatingReviewCommand = new EditRatingReviewCommand(ratingReviewRepository, ratingReview);
