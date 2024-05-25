@@ -1,0 +1,8 @@
+scrape_configs:
+  - job_name: 'MyAppMetrics'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: ['34.126.174.63']
+        labels:
+          application: 'rating-review'
