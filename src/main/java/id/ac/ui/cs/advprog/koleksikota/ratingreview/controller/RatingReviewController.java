@@ -10,15 +10,16 @@ import id.ac.ui.cs.advprog.koleksikota.ratingreview.service.RatingReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
+@EnableAsync
 @RequestMapping("/rating-review")
 public class RatingReviewController {
 
@@ -33,74 +34,39 @@ public class RatingReviewController {
         return "HomePage";
     }
 
-    @PostMapping
-    public ResponseEntity<?> createRatingReview(@RequestBody RatingReview ratingReview){
-        Map<String, Object> res = new HashMap<>();
-        try {
-            RatingReviewCommand createRatingReviewCommand = new CreateRatingReviewCommand(ratingReview, ratingReviewRepository);
-            ratingReviewService.executeCommand(createRatingReviewCommand);
+    @Async
+    @PostMapping("/{boxId}/create-rating-review")
+    public CompletableFuture<ResponseEntity<Optional<RatingReview>>> createRatingReview(@PathVariable String boxId, @RequestBody Map<String, Object> requestBody){
+        String reviewer = requestBody.get("reviewer").toString();
+        int rating = Integer.parseInt(requestBody.get("rating").toString());
+        String review = requestBody.get("review").toString();
+        RatingReview ratingReview = new RatingReview(boxId, reviewer, review, rating);
 
-            res.put("ratingReview", createRatingReviewCommand);
-            res.put("message", "Rating & Review Created Successfully");
-            return ResponseEntity.status(HttpStatus.CREATED).body(res);
-
-        } catch (Exception e){
-            res.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            res.put("error", e.getMessage());
-            res.put("message", "Server Error");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
+        RatingReviewCommand createRatingReviewCommand = new CreateRatingReviewCommand(ratingReview, ratingReviewRepository);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(ratingReviewService.executeCommand(createRatingReviewCommand)));
     }
 
-    @DeleteMapping("/{ratingReviewId}")
-    public ResponseEntity<?> deleteRatingReview(@PathVariable("ratingReviewId") UUID id){
-        Map<String, Object> res = new HashMap<>();
-        try{
-            RatingReviewCommand deleteRatingReviewCommand = new DeleteRatingReviewCommand(id, ratingReviewRepository);
-            ratingReviewService.executeCommand(deleteRatingReviewCommand);
-
-            res.put("code", HttpStatus.OK.value());
-            res.put("message", "Rating & Review Deleted Successfully");
-            return ResponseEntity.status(HttpStatus.OK).body(res);
-
-        } catch (Exception e){
-            res.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            res.put("error", e.getMessage());
-            res.put("message", "Server Error");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
+    @Async
+    @DeleteMapping("/{ratingReviewId}/delete-rating-review")
+    public CompletableFuture<ResponseEntity<Optional<RatingReview>>> deleteRatingReview(@PathVariable String ratingReviewId){
+        RatingReviewCommand deleteRatingReviewCommand = new DeleteRatingReviewCommand(ratingReviewId, ratingReviewRepository);
+        ratingReviewService.executeCommand(deleteRatingReviewCommand);
+        return CompletableFuture.completedFuture(ResponseEntity.ok().build());
     }
 
-    @PutMapping
-    public ResponseEntity<?> editRatingReview(@RequestBody RatingReview ratingReview){
-        Map<String, Object> res = new HashMap<>();
-        try{
+    @Async
+    @PutMapping("/{ratingReviewId}/edit-rating-review")
+    public CompletableFuture<ResponseEntity<Optional<RatingReview>>> editRatingReview(@PathVariable String ratingReviewId, @RequestBody Map<String, String> requestBody){
+        Optional<RatingReview> optionalRatingReview = ratingReviewService.findReviewById(ratingReviewId);
+        if (optionalRatingReview.isPresent()){
+            RatingReview ratingReview = optionalRatingReview.get();
+            ratingReview.setRating(Integer.parseInt(requestBody.get("rating")));
+            ratingReview.setReview(requestBody.get("review"));
+
             RatingReviewCommand editRatingReviewCommand = new EditRatingReviewCommand(ratingReviewRepository, ratingReview);
-            ratingReviewService.executeCommand(editRatingReviewCommand);
-
-            res.put("ratingReview", editRatingReviewCommand);
-            res.put("message", "Rating & Review with Id: " + ratingReview.getRatingReviewId() + " updated Successfully");
-            return ResponseEntity.status(HttpStatus.CREATED).body(res);
-
-        } catch (Exception e){
-            res.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            res.put("error", e.getMessage());
-            res.put("message", "Server Error");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
-    }
-
-    @GetMapping("/findAllRatingReview")
-    public ResponseEntity<?> findAllRatingReview(){
-        try {
-            List<RatingReview> allRatingReview = ratingReviewService.findAll();
-            return ResponseEntity.ok(allRatingReview);
-        }catch (Exception e){
-            Map<String, Object> response = new HashMap<>();
-            response.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.put("error", e.getMessage());
-            response.put("message", "Server Error");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return CompletableFuture.completedFuture(ResponseEntity.ok(ratingReviewService.executeCommand(editRatingReviewCommand)));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
         }
     }
 }

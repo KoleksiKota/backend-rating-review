@@ -16,12 +16,12 @@ import org.springframework.stereotype.Controller;
 @AllArgsConstructor
 @Table(name = "rating-review")
 public class RatingReview {
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Id @Column(name = "id_rating_review", updatable = false, nullable = false)
-    private UUID ratingReviewId;
+    private String ratingReviewId;
 
-    @Column(name = "reviewer")
-    private String reviewer;
+    @Column(name = "userId")
+    private String userId;
 
     @Column(name = "rating")
     int rating;
@@ -35,9 +35,20 @@ public class RatingReview {
     @Transient
     Box box;
 
+    @Column(name = "subscriptionBoxId")
+    String subscriptionBoxId;
+
     public RatingReview(Box box, String reviewer, String review, int rating) {
         this.box = box;
-        this.reviewer = reviewer;
+        this.userId = reviewer;
+        this.review = review;
+        setRating(rating);
+        this.approvalStatus = ApprovalStatus.PENDING.getValue();
+    }
+
+    public RatingReview(String boxId, String reviewer, String review, int rating) {
+        this.subscriptionBoxId = boxId;
+        this.userId = reviewer;
         this.review = review;
         setRating(rating);
         this.approvalStatus = ApprovalStatus.PENDING.getValue();

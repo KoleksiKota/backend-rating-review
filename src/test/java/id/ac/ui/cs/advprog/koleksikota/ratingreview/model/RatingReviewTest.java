@@ -36,12 +36,12 @@ class RatingReviewTest {
         Box box = boxes.getFirst();
         RatingReview ratingReview = new RatingReview(box, "jajang",
                 "bagus boxnya, ada  bau kali ciliwung", 4);
-        ratingReview.setRatingReviewId(UUID.fromString("cef7ead5-710d-4b10-8266-5e1c81a636fe"));
+        ratingReview.setRatingReviewId("cef7ead5-710d-4b10-8266-5e1c81a636fe");
 
         assertNotNull(ratingReview);
         assertEquals(box.getBoxId(), ratingReview.getBox().getBoxId());
         assertEquals("cef7ead5-710d-4b10-8266-5e1c81a636fe", String.valueOf(ratingReview.getRatingReviewId()));
-        assertEquals("jajang", ratingReview.getReviewer());
+        assertEquals("jajang", ratingReview.getUserId());
         assertEquals("bagus boxnya, ada  bau kali ciliwung", ratingReview.getReview());
         assertEquals(4, ratingReview.getRating());
         assertEquals(ApprovalStatus.PENDING.getValue(), ratingReview.getApprovalStatus());

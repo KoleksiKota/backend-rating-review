@@ -39,12 +39,12 @@ class RatingReviewRepositoryTest {
 
         RatingReview ratingReview1 = new RatingReview(box, "07f9b8b0-7257-4434-a5b9-79c9703f0760",
                 "Mantap Mang", 5);
-        ratingReview1.setRatingReviewId(UUID.fromString("4ec1f12c-8e2b-4f02-85c0-531e762b483b"));
+        ratingReview1.setRatingReviewId("4ec1f12c-8e2b-4f02-85c0-531e762b483b");
         ratingReviewList.add(ratingReview1);
 
         RatingReview ratingReview2 = new RatingReview(box, "07f9b8b0-7257-4434-a5b9-79c9703f0760",
                 "Kgk enak kiriman lu cok", 1);
-        ratingReview2.setRatingReviewId(UUID.fromString("8d3e2b3b-b0d9-4e80-a641-2e02c1a935fb"));
+        ratingReview2.setRatingReviewId("8d3e2b3b-b0d9-4e80-a641-2e02c1a935fb");
         ratingReviewList.add(ratingReview2);
     }
 
@@ -59,7 +59,7 @@ class RatingReviewRepositoryTest {
         Optional<RatingReview> findResult = ratingReviewRepository.findById(String.valueOf(ratingReview.getRatingReviewId()));
         assertEquals(ratingReview.getRatingReviewId(), result.getRatingReviewId());
         assertEquals(ratingReview.getRatingReviewId(), findResult.get().getRatingReviewId());
-        assertEquals(ratingReview.getReviewer(), findResult.get().getReviewer());
+        assertEquals(ratingReview.getUserId(), findResult.get().getUserId());
         assertEquals(ratingReview.getBox(), findResult.get().getBox());
         assertEquals(ratingReview.getReview(), findResult.get().getReview());
         assertEquals(ratingReview.getRating(), findResult.get().getRating());    }
@@ -74,7 +74,7 @@ class RatingReviewRepositoryTest {
 
         Optional<RatingReview> found = ratingReviewRepository.findById(String.valueOf(ratingReviewList.get(0).getRatingReviewId()));
         assertEquals(ratingReviewList.get(0).getRatingReviewId(), found.get().getRatingReviewId());
-        assertEquals(ratingReviewList.get(0).getReviewer(), found.get().getReviewer());
+        assertEquals(ratingReviewList.get(0).getUserId(), found.get().getUserId());
         assertEquals(ratingReviewList.get(0).getBox(), found.get().getBox());
         assertEquals(ratingReviewList.get(0).getReview(), found.get().getReview());
         assertEquals(ratingReviewList.get(0).getRating(), found.get().getRating());

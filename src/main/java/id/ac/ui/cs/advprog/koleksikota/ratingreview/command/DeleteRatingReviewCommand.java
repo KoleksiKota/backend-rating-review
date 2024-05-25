@@ -7,18 +7,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class DeleteRatingReviewCommand implements RatingReviewCommand {
-    private final UUID ratingReviewId;
+    private final String ratingReviewId;
     private final RatingReviewRepository ratingReviewRepository;
 
-    public DeleteRatingReviewCommand(UUID ratingReviewId, RatingReviewRepository ratingReviewRepository) {
+    public DeleteRatingReviewCommand(String ratingReviewId, RatingReviewRepository ratingReviewRepository) {
         this.ratingReviewId = ratingReviewId;
         this.ratingReviewRepository = ratingReviewRepository;
     }
 
     @Override
     public Optional<RatingReview> execute() {
-        Optional<RatingReview> ratingReview = ratingReviewRepository.findById(String.valueOf(ratingReviewId));
-        ratingReview.ifPresent(value -> ratingReviewRepository.deleteById(String.valueOf(value)));
+        Optional<RatingReview> ratingReview = ratingReviewRepository.findById(ratingReviewId);
+        ratingReview.ifPresent(value -> ratingReviewRepository.deleteById(value.getRatingReviewId()));
         return ratingReview;
     }
 }
