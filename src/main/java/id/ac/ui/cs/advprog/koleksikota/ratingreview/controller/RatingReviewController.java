@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
+@CrossOrigin
 @RestController
 @EnableAsync
 @RequestMapping("/rating-review")
@@ -36,10 +37,10 @@ public class RatingReviewController {
 
     @Async
     @PostMapping("/{boxId}/create-rating-review")
-    public CompletableFuture<ResponseEntity<Optional<RatingReview>>> createRatingReview(@PathVariable String boxId, @RequestBody Map<String, Object> requestBody){
-        String reviewer = requestBody.get("reviewer").toString();
-        int rating = Integer.parseInt(requestBody.get("rating").toString());
-        String review = requestBody.get("review").toString();
+    public CompletableFuture<ResponseEntity<Optional<RatingReview>>> createRatingReview(@PathVariable String boxId, @RequestBody Map<String, String> requestBody){
+        String reviewer = requestBody.get("reviewer");
+        int rating = Integer.parseInt(requestBody.get("rating"));
+        String review = requestBody.get("review");
         RatingReview ratingReview = new RatingReview(boxId, reviewer, review, rating);
 
         RatingReviewCommand createRatingReviewCommand = new CreateRatingReviewCommand(ratingReview, ratingReviewRepository);
@@ -55,7 +56,7 @@ public class RatingReviewController {
     }
 
     @Async
-    @PutMapping("/{ratingReviewId}/edit-rating-review")
+    @PatchMapping("/{ratingReviewId}/edit-rating-review")
     public CompletableFuture<ResponseEntity<Optional<RatingReview>>> editRatingReview(@PathVariable String ratingReviewId, @RequestBody Map<String, String> requestBody){
         Optional<RatingReview> optionalRatingReview = ratingReviewService.findReviewById(ratingReviewId);
         if (optionalRatingReview.isPresent()){
@@ -68,5 +69,46 @@ public class RatingReviewController {
         } else {
             return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
         }
+    }
+
+    @Async
+    @GetMapping("/all")
+    public CompletableFuture<ResponseEntity<List<RatingReview>>> getAllRatingReview(){
+        List<RatingReview> allRatingReview = ratingReviewService.findAll();
+        return CompletableFuture.completedFuture(ResponseEntity.ok(allRatingReview));
+    }
+
+    @Async
+    @GetMapping("/{ratingReviewId}")
+    public CompletableFuture<ResponseEntity<RatingReview>> getRatingReviewById(@PathVariable String ratingReviewId){
+        Optional<RatingReview> optionalRatingReview = ratingReviewService.findReviewById(ratingReviewId);
+        if(optionalRatingReview.isPresent()){
+            RatingReview ratingReview = optionalRatingReview.get();
+            return CompletableFuture.completedFuture(ResponseEntity.ok(ratingReview));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+        }
+    }
+
+    @Async
+    @GetMapping("user/{userId}")
+    public CompletableFuture<ResponseEntity<List<RatingReview>>> getRatingReviewByUserId(@PathVariable String userId){
+        List<RatingReview> userRatingReviews = ratingReviewService.findAllByUserId(userId);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(userRatingReviews));
+    }
+
+    @Async
+    @GetMapping("subscription-box/{subscriptionBoxId}")
+    public CompletableFuture<ResponseEntity<List<RatingReview>>> getRatingReviewBySubscriptionBoxId(@PathVariable String subscriptionBoxId){
+        List<RatingReview> subsBoxRatingReviews = ratingReviewService.findAllBySubscriptionBoxId(subscriptionBoxId);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(subsBoxRatingReviews));
+    }
+
+    @Async
+    @PatchMapping("/{ratingReviewId}/change-status")
+    public CompletableFuture<ResponseEntity<Optional<RatingReview>>> editApprovalStatus(@PathVariable String ratingReviewId, @RequestBody Map<String, String> requestBody){
+        String newStatus = requestBody.get("status");
+        RatingReview updatedRatingReview = ratingReviewService.updateReviewStatus(ratingReviewId, newStatus);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(Optional.ofNullable(updatedRatingReview)));
     }
 }
