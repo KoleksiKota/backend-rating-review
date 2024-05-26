@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 @Getter
 @Setter
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "rating-review")
@@ -29,7 +28,7 @@ public class RatingReview {
     @Column(name = "review")
     String review;
 
-    @Column(name = "approval_status") @Builder.Default
+    @Column(name = "approval_status")
     String approvalStatus = ApprovalStatus.PENDING.getValue();
 
     @Transient

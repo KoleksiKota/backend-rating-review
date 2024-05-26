@@ -43,6 +43,8 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+    implementation("org.reactivestreams:reactive-streams:1.0.3")
+
 }
 
 tasks.withType<Test> {
